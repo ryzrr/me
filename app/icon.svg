@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="petal" x1="50" y1="14" x2="50" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f6a8c6"/>
+      <stop offset="1" stop-color="#d24d7d"/>
+    </linearGradient>
+    <radialGradient id="bg" cx="34" cy="30" r="78" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#271d2f"/>
+      <stop offset="1" stop-color="#17111b"/>
+    </radialGradient>
+    <path id="p" d="M50 50 C36 45 31 33 34 25 C36 18 40 15 44 16 Q48 19 50 22 Q52 19 56 16 C60 15 64 18 66 25 C69 33 64 45 50 50 Z"/>
+  </defs>
+  <rect width="100" height="100" rx="24" fill="url(#bg)"/>
+  <g fill="url(#petal)" stroke="#a52a67" stroke-width="1" stroke-linejoin="round" opacity="0.98">
+    <use href="#p" transform="rotate(0 50 50)"/>
+    <use href="#p" transform="rotate(72 50 50)"/>
+    <use href="#p" transform="rotate(144 50 50)"/>
+    <use href="#p" transform="rotate(216 50 50)"/>
+    <use href="#p" transform="rotate(288 50 50)"/>
+  </g>
+  <circle cx="50" cy="50" r="6.5" fill="#c99b4e"/>
+  <circle cx="50" cy="50" r="2.6" fill="#8a6a2f"/>
+</svg>
