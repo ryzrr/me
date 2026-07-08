@@ -193,7 +193,7 @@ export default function Hero() {
             transition={{ duration: 1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="relative"
           >
-            <HeroCharacter className="h-auto w-[210px] drop-shadow-[0_40px_60px_rgba(200,70,140,0.28)] sm:w-[320px] lg:w-[460px]" />
+            <HeroCharacter className="h-auto w-[210px] sm:w-[320px] lg:w-[460px]" />
 
             <motion.a
               href="#works"

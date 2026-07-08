@@ -11,13 +11,19 @@ export default function Experience() {
     <Section id="journey">
       <ChapterHeading chapter={experienceChapter} />
 
-      <div className="relative ml-2 sm:ml-4">
-        {/* the ink line */}
+      <motion.div
+        className="relative ml-2 sm:ml-4"
+        initial="hidden"
+        whileInView="shown"
+        viewport={{ once: true, margin: "-100px" }}
+      >
+        {/* the ink line — animated via the parent's in-view state so the
+            observed target is the full-height container, not this zero-height
+            (scaleY:0) span. IntersectionObserver can fail to fire for a
+            zero-size target on mobile, which left the line invisible. */}
         <motion.span
           aria-hidden
-          initial={{ scaleY: 0 }}
-          whileInView={{ scaleY: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
+          variants={{ hidden: { scaleY: 0 }, shown: { scaleY: 1 } }}
           transition={{ duration: 1.1, ease: "easeInOut" }}
           className="absolute left-0 top-2 h-[calc(100%-1rem)] w-0.5 origin-top bg-gradient-to-b from-vermilion via-sakura-deep to-transparent"
         />
@@ -72,7 +78,7 @@ export default function Experience() {
             </Reveal>
           ))}
         </div>
-      </div>
+      </motion.div>
     </Section>
   );
 }

@@ -64,18 +64,50 @@ export default function HeroCharacter({
       {/* SVG base — hidden once a real image successfully loads */}
       <SamuraiCharacter className={`${className} ${loaded ? "invisible" : ""}`} />
 
-      {/* real image overlays only when it actually loads (no broken-image flash) */}
-      <motion.img
-        ref={imgRef}
-        src={src}
-        alt={`${profile.name} as a samurai`}
-        draggable={false}
-        className={`absolute left-0 top-0 h-auto transition-opacity duration-500 ${className} ${
-          loaded ? "opacity-100" : "opacity-0"
-        }`}
+      {/* real image overlays only when it actually loads (no broken-image flash).
+          A bottom gradient mask dissolves the image's own lower edge so the
+          character never reads as a hard-cut cutout (works for any drop-in art).
+
+          The soft glow lives on this WRAPPER, not on the masked <img> itself:
+          a mask + drop-shadow on the same element makes some browsers cast the
+          shadow from the rectangular box (a visible rectangle behind the art),
+          so the filter must sit one level up where it reads the masked shape. */}
+      <motion.span
+        className="absolute left-0 top-0 block drop-shadow-[0_36px_48px_rgba(200,70,140,0.24)]"
         animate={reduce || !loaded ? {} : { y: [0, -16, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      />
+      >
+        <img
+          ref={imgRef}
+          src={src}
+          alt={`${profile.name} as a samurai`}
+          draggable={false}
+          style={{
+            maskImage:
+              "linear-gradient(to bottom, #000 86%, rgba(0,0,0,0.5) 95%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, #000 86%, rgba(0,0,0,0.5) 95%, transparent 100%)",
+          }}
+          className={`block h-auto transition-opacity duration-500 ${className} ${
+            loaded ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      </motion.span>
+
+      {/* CLOUD PUFF at the base — purely atmospheric. The gradient mask above
+          already dissolves the character's edge into whatever background sits
+          behind it (works in both themes); this is just a small, round, blurred
+          sakura glow at the feet for warmth — deliberately compact (not a wide
+          band) so it never reads as a rectangle. Wrapper mirrors the image box
+          so it stays glued to the real bottom edge at every breakpoint. */}
+      {loaded && (
+        <span
+          aria-hidden
+          className={`pointer-events-none absolute left-0 top-0 aspect-[864/1152] ${className}`}
+        >
+          <span className="absolute inset-x-[30%] bottom-[2%] h-[16%] rounded-full bg-sakura/25 blur-2xl" />
+        </span>
+      )}
     </span>
   );
 }

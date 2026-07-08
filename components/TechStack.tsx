@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import Section from "./Section";
 import ChapterHeading from "./ChapterHeading";
 import Reveal from "./Reveal";
+import TechIcon from "./TechIcon";
 import { techChapter, techStack } from "@/lib/content";
 
 export default function TechStack() {
@@ -33,25 +34,36 @@ export default function TechStack() {
                 {cat.items.map((item) => (
                   <li key={item.name}>
                     <div className="mb-1.5 flex items-center justify-between">
-                      <span className="font-sans text-sm font-medium text-sumi">
+                      <span className="flex items-center gap-2 font-sans text-sm font-medium text-sumi">
+                        <TechIcon
+                          name={item.name}
+                          className="h-4 w-4 shrink-0 text-vermilion"
+                        />
                         {item.name}
                       </span>
                       <span className="font-mono text-xs text-sumi-soft">
                         {item.level}
                       </span>
                     </div>
-                    <div className="h-1.5 overflow-hidden rounded-full bg-sumi/15">
+                    {/* Trigger in-view on the full-size track, not the bar:
+                        the bar starts at width:0, and a zero-width target can
+                        fail to fire IntersectionObserver on mobile (leaving the
+                        bar empty). The track always has real dimensions. */}
+                    <motion.div
+                      className="h-1.5 overflow-hidden rounded-full bg-sumi/15"
+                      initial="hidden"
+                      whileInView="shown"
+                      viewport={{ once: true, margin: "-60px" }}
+                    >
                       <motion.div
                         className="h-full rounded-full bg-gradient-to-r from-sakura via-sakura-deep to-vermilion"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${item.level}%` }}
-                        viewport={{ once: true, margin: "-60px" }}
-                        transition={{
-                          duration: 1,
-                          ease: [0.22, 1, 0.36, 1],
+                        variants={{
+                          hidden: { width: 0 },
+                          shown: { width: `${item.level}%` },
                         }}
+                        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                       />
-                    </div>
+                    </motion.div>
                   </li>
                 ))}
               </ul>

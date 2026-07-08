@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import Section from "./Section";
 import ChapterHeading from "./ChapterHeading";
 import Reveal from "./Reveal";
+import TechIcon from "./TechIcon";
 import { projects, projectsChapter } from "@/lib/content";
 
 export default function Projects() {
@@ -67,8 +68,12 @@ export default function Projects() {
                   {p.tech.map((t) => (
                     <span
                       key={t}
-                      className="rounded-md border border-sumi/10 bg-washi-deep px-2.5 py-1 font-mono text-[11px] text-sumi-soft"
+                      className="inline-flex items-center gap-1.5 rounded-md border border-sumi/10 bg-washi-deep px-2.5 py-1 font-mono text-[11px] text-sumi-soft"
                     >
+                      <TechIcon
+                        name={t}
+                        className="h-3 w-3 shrink-0 text-vermilion"
+                      />
                       {t}
                     </span>
                   ))}
