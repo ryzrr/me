@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local working assets (backups not meant for the public repo)
+/hero-samurai-original.jpg
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

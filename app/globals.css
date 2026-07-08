@@ -1,26 +1,322 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Class/attribute-driven dark mode: `dark:` utilities activate under
+   <html data-theme="dark">. Tokens below flip automatically via var(). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------
+   Sakura & Ink — theme tokens
+   Colors are static hex so opacity modifiers (e.g. bg-sumi/10) work.
+------------------------------------------------------------------ */
+@theme {
+  --color-washi: #fbf3ec; /* warm paper */
+  --color-washi-deep: #f3e3d6; /* deeper paper */
+  --color-washi-dark: #ede0d3;
+  --color-card: #fffaf4; /* lifted paper card surface */
+
+  --color-sumi: #1c1613; /* sumi ink — primary text */
+  --color-sumi-soft: #4a3f37; /* muted ink (body) */
+  --color-sumi-faint: #6b5d52; /* faint ink — labels (darkened for contrast) */
+
+  --color-sakura: #e06c98; /* cherry blossom — vivid rose from the pagoda scene */
+  --color-sakura-deep: #d24d7d;
+  --color-sakura-light: #f6cfe0;
+
+  --color-vermilion: #c2367b; /* cherry-blossom rose — the primary accent */
+  --color-vermilion-deep: #a52a67;
+
+  --color-berry: #b23a6c; /* deep sakura-rose */
+
+  --color-gold: #c99b4e; /* warm amber foliage */
+  --color-matcha: #7f9270; /* sage / matcha */
+
+  --shadow-ink: 0 24px 60px -30px rgba(28, 22, 19, 0.45);
+  --shadow-float: 0 30px 80px -40px rgba(154, 42, 32, 0.35);
 }
 
+/* Fonts pass through next/font CSS variables (inline so var() is kept).
+   CJK glyphs (kanji) fall back to the system's Japanese font. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-serif-display), "Yu Mincho", "Hiragino Mincho ProN",
+    "Noto Serif JP", "Songti SC", Georgia, serif;
+  --font-sans: var(--font-sans-body), "Yu Gothic UI", "Hiragino Kaku Gothic ProN",
+    system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ------------------------------------------------------------------
+   Dark mode — "Dusk over the Pagoda"
+   A deep aubergine-plum ground (the scene's twilight sky), warm
+   paper-rose text, and blossom/coral/amber accents that glow like
+   the lanterns. Near-flat surfaces + one soft dusk glow — no busy
+   gradients. Overriding the tokens re-themes the whole site because
+   every utility resolves through var(--color-*).
+------------------------------------------------------------------ */
+:root[data-theme="dark"] {
+  --color-washi: #17111b; /* deep aubergine dusk ground */
+  --color-washi-deep: #1e1624;
+  --color-washi-dark: #271d2f;
+  --color-card: #211826; /* lifted plum surface */
+
+  --color-sumi: #f4e9ef; /* warm paper-rose — the primary text */
+  --color-sumi-soft: #cdbcc9;
+  --color-sumi-faint: #9d8c9a;
+
+  --color-sakura: #f09bbb;
+  --color-sakura-deep: #ea83a9;
+  --color-sakura-light: #33212f; /* muted plum-rose panel (used in gradients) */
+
+  --color-vermilion: #f58ab8; /* cherry-blossom rose — glows on the plum */
+  --color-vermilion-deep: #e86fa4;
+
+  --color-berry: #ec7ba6;
+
+  --color-gold: #e3ba6a; /* warm amber highlight */
+  --color-matcha: #a0b589;
+
+  --shadow-ink: 0 24px 60px -30px rgba(0, 0, 0, 0.62);
+  --shadow-float: 0 30px 80px -40px rgba(0, 0, 0, 0.58);
+
+  /* GitHub heatmap ramp — deep plum → hot blossom on the dusk ground */
+  --gh-0: rgba(244, 233, 239, 0.05);
+  --gh-1: #45213c;
+  --gh-2: #7c3159;
+  --gh-3: #bf5a83;
+  --gh-4: #f199ba;
+
+  color-scheme: dark;
+}
+
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+  --paper-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+
+  /* GitHub heatmap ramp — faint ink → sakura → vermilion */
+  --gh-0: rgba(28, 22, 19, 0.06);
+  --gh-1: #f7d3e0;
+  --gh-2: #f0a8c0;
+  --gh-3: #dd6f8a;
+  --gh-4: #c0392b;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Hina Mincho ships a single (400) weight by design — it's meant to be fine
+   and delicate. Disable synthetic bolding so `font-semibold`/`font-bold` on
+   headings don't fake-embolden it into mush; it stays hairline and elegant. */
+html {
+  font-synthesis-weight: none;
+}
+
+html {
+  scroll-behavior: auto; /* Lenis handles smoothing */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-washi);
+  color: var(--color-sumi);
+  font-family: var(--font-sans);
+  /* `clip` (not `hidden`) prevents horizontal scroll WITHOUT making body a
+     scroll container — otherwise it breaks `position: sticky` (pinned hero). */
+  overflow-x: clip;
+  position: relative;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Warm washi paper: a soft warmth top-left + a faint rose top-right */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  transition: background 0.5s ease;
+  background:
+    radial-gradient(130% 90% at 12% -5%, #fef6f1 0%, transparent 55%),
+    radial-gradient(120% 85% at 90% 6%, #fbe7ef 0%, transparent 52%),
+    var(--color-washi);
+}
+
+/* Dark: near-flat deep plum with a single soft dusk glow up top */
+:root[data-theme="dark"] body::before {
+  background:
+    radial-gradient(115% 75% at 50% -12%, #251835 0%, transparent 60%),
+    var(--color-washi);
+}
+
+/* Subtle paper grain overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--paper-noise);
+  background-size: 140px 140px;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Dark: multiply would swallow the grain, so lighten it instead */
+:root[data-theme="dark"] body::after {
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+}
+
+::selection {
+  background: var(--color-sakura);
+  color: #fff;
+}
+
+/* ------------------------------------------------------------------
+   Utilities
+------------------------------------------------------------------ */
+@utility vertical-jp {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0.35em;
+}
+
+/* Ink brush underline that "paints" under headings */
+@utility brush-underline {
+  position: relative;
+}
+
+/* Hanko / seal stamp look */
+@utility seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-vermilion);
+  border: 2px solid var(--color-vermilion);
+  border-radius: 8px;
+  font-family: var(--font-serif);
+  box-shadow: inset 0 0 0 1px rgba(194, 54, 123, 0.3);
+}
+
+/* Thin ink rule */
+@utility ink-rule {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-sumi-faint) 20%,
+    var(--color-sumi-faint) 80%,
+    transparent
+  );
+}
+
+/* Gradient sakura text — all cherry-blossom, no red/orange */
+@utility text-sakura-gradient {
+  background: linear-gradient(120deg, #ec8cb2 0%, #d24d7d 55%, #c2367b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ------------------------------------------------------------------
+   Keyframe animations (ambient — Motion handles interaction)
+------------------------------------------------------------------ */
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes ribbon-flutter {
+  0%,
+  100% {
+    transform: rotate(-3deg) skewX(0deg);
+  }
+  50% {
+    transform: rotate(4deg) skewX(-6deg);
+  }
+}
+
+@keyframes glint {
+  0%,
+  70%,
+  100% {
+    opacity: 0;
+    transform: translateX(-120%);
+  }
+  80% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0;
+    transform: translateX(120%);
+  }
+}
+
+@keyframes pulse-seal {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes draw-in {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-float-soft {
+  animation: float-soft 6s ease-in-out infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-washi-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-sakura-deep);
+  border-radius: 999px;
+  border: 2px solid var(--color-washi-deep);
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
